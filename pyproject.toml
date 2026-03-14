@@ -1,0 +1,31 @@
+[project]
+name = "agentlint"
+version = "0.2.0"
+description = "Safety-focused linter for AI agent configuration files"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Max Dauber" }]
+keywords = ["agents", "lint", "AI", "AGENTS.md", "CLAUDE.md", "cursorrules"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Software Development :: Quality Assurance",
+    "Environment :: Console",
+]
+dependencies = [
+    "click>=8",
+    "colorama>=0.4",
+    "pyyaml>=6",
+]
+
+[project.optional-dependencies]
+accurate = ["tiktoken>=0.7"]
+dev = ["pytest"]
+
+[project.scripts]
+agentlint = "agentlint.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

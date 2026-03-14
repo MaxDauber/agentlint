@@ -1,0 +1,74 @@
+name: agentlint
+description: >
+  Lint AI agent configuration files (AGENTS.md, CLAUDE.md, .cursorrules, etc.).
+  Reports errors as GitHub Actions annotations in pull requests.
+
+branding:
+  icon: shield
+  color: red
+
+inputs:
+  files:
+    description: >
+      Space-separated list of files to lint.
+      Defaults to auto-discovery from the project root.
+    required: false
+    default: ""
+  root:
+    description: Project root for auto-discovery.
+    required: false
+    default: "."
+  strict:
+    description: Fail on warnings as well as errors.
+    required: false
+    default: "false"
+  all-rules:
+    description: Include opt-in style/clarity rules.
+    required: false
+    default: "false"
+  baseline:
+    description: >
+      Suppress violations already captured in .agentlint-baseline.json.
+      Useful for gradual adoption on existing repos.
+    required: false
+    default: "false"
+  version:
+    description: agentlint version to install (e.g. "0.2.0" or "latest").
+    required: false
+    default: "latest"
+
+runs:
+  using: composite
+  steps:
+    - name: Install agentlint
+      shell: bash
+      run: |
+        if [ "${{ inputs.version }}" = "latest" ]; then
+          pip install --quiet agentlint
+        else
+          pip install --quiet "agentlint==${{ inputs.version }}"
+        fi
+
+    - name: Run agentlint
+      shell: bash
+      run: |
+        ARGS="check --format github"
+
+        if [ -n "${{ inputs.files }}" ]; then
+          ARGS="$ARGS ${{ inputs.files }}"
+        fi
+
+        if [ "${{ inputs.strict }}" = "true" ]; then
+          ARGS="$ARGS --strict"
+        fi
+
+        if [ "${{ inputs.all-rules }}" = "true" ]; then
+          ARGS="$ARGS --all"
+        fi
+
+        if [ "${{ inputs.baseline }}" = "true" ]; then
+          ARGS="$ARGS --baseline"
+        fi
+
+        agentlint $ARGS
+      working-directory: ${{ inputs.root }}

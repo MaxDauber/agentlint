@@ -1,0 +1,39 @@
+- id: agentlint
+  name: agentlint
+  description: Lint AI agent configuration files (AGENTS.md, CLAUDE.md, .cursorrules, etc.)
+  language: python
+  entry: agentlint
+  args: [check, --strict]
+  pass_filenames: false
+  types_or: [markdown, file]
+  files: >
+    (?x)^(
+      AGENTS\.md|
+      CLAUDE\.md|
+      GEMINI\.md|
+      JULES\.md|
+      \.cursorrules|
+      \.clinerules|
+      \.windsurfrules|
+      \.github/copilot-instructions\.md
+    )$
+
+- id: agentlint-fix
+  name: agentlint fix (safe)
+  description: Auto-fix safe lint violations in agent configuration files.
+  language: python
+  entry: agentlint
+  args: [fix]
+  pass_filenames: false
+  types_or: [markdown, file]
+  files: >
+    (?x)^(
+      AGENTS\.md|
+      CLAUDE\.md|
+      GEMINI\.md|
+      JULES\.md|
+      \.cursorrules|
+      \.clinerules|
+      \.windsurfrules|
+      \.github/copilot-instructions\.md
+    )$
